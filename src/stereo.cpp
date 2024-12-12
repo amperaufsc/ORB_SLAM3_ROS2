@@ -1,11 +1,49 @@
+#include<iostream>
+#include<algorithm>
+#include<fstream>
+#include<chrono>
+#include <string> 
+
+#include "rclcpp/rclcpp.hpp"
 #include "stereo-slam-node.hpp"
+
 #include <opencv2/core/core.hpp>
+
+#include "System.h"
+
 
 using std::placeholders::_1;
 using std::placeholders::_2;
 
+int main(int argc, char **argv)
+{
+    rclcpp::init(argc, argv);
+    if(argc < 4)
+    {
+        std::cerr << "\nUsage: ros2 run orbslam stereo path_to_vocabulary path_to_settings do_rectify" << std::endl;
+        return 1;
+    }
+    auto node = std::make_shared<rclcpp::Node>("run_slam");
+
+    
+    bool visualization = strcmp(argv[4],"True") == 0;
+    ORB_SLAM3::System pSLAM(argv[1], argv[2], ORB_SLAM3::System::STEREO, visualization);
+
+    std::shared_ptr<StereoSlamNode> slam_ros;
+    slam_ros = std::make_shared<StereoSlamNode>(&pSLAM, node.get(), argv[2], argv[3]);
+    std::cout << "============================ " << std::endl;
+
+    rclcpp::spin(slam_ros->node_->get_node_base_interface());
+    rclcpp::shutdown();
+
+    return EXIT_SUCCESS;
+}
+
+
+
+
 StereoSlamNode::StereoSlamNode(ORB_SLAM3::System* pSLAM, rclcpp::Node* node, const std::string &strSettingsFile, const std::string &strDoRectify)
-: Node("ORB_SLAM3_ROS2"), m_SLAM(pSLAM), node_(node)
+: SlamNode(pSLAM, node)
 {
     stringstream ss(strDoRectify);
     ss >> boolalpha >> doRectify;
@@ -45,20 +83,16 @@ StereoSlamNode::StereoSlamNode(ORB_SLAM3::System* pSLAM, rclcpp::Node* node, con
     }
 
     // Cria os subscritores usando o nó passado
-    left_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(node_, "camera/left");
-    right_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(node_, "camera/right");
+    left_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(node, "camera/left");
+    right_sub = std::make_shared<message_filters::Subscriber<ImageMsg>>(node, "camera/right");
 
     // Sincroniza os subscritores
     syncApproximate = std::make_shared<message_filters::Synchronizer<approximate_sync_policy>>(approximate_sync_policy(10), *left_sub, *right_sub);
     syncApproximate->registerCallback(&StereoSlamNode::GrabStereo, this);
 }
 
-StereoSlamNode::~StereoSlamNode() {
-    // Para todas as threads
-    m_SLAM->Shutdown();
-
-    // Salva a trajetória da câmera
-    m_SLAM->SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+StereoSlamNode::~StereoSlamNode() 
+{
 }
 
 void StereoSlamNode::GrabStereo(const ImageMsg::SharedPtr msgLeft, const ImageMsg::SharedPtr msgRight) {
@@ -78,19 +112,18 @@ void StereoSlamNode::GrabStereo(const ImageMsg::SharedPtr msgLeft, const ImageMs
         return;
     }
 
+    current_frame_time_ = now();
+
     if (doRectify) {
         cv::Mat imLeft, imRight;
         cv::remap(cv_ptrLeft->image, imLeft, M1l, M2l, cv::INTER_LINEAR);
         cv::remap(cv_ptrRight->image, imRight, M1r, M2r, cv::INTER_LINEAR);
-        m_SLAM->TrackStereo(imLeft, imRight, Utility::StampToSec(msgLeft->header.stamp));
+        SE3 = m_SLAM->TrackStereo(imLeft, imRight, Utility::StampToSec(msgLeft->header.stamp));
     } else {
-        m_SLAM->TrackStereo(cv_ptrLeft->image, cv_ptrRight->image, Utility::StampToSec(msgLeft->header.stamp));
+        SE3 = m_SLAM->TrackStereo(cv_ptrLeft->image, cv_ptrRight->image, Utility::StampToSec(msgLeft->header.stamp));
     }
+
+    Update();
 }
-
-
-
-
-
 
 
