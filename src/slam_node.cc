@@ -3,12 +3,12 @@
 SlamNode::SlamNode(ORB_SLAM3::System* pSLAM, rclcpp::Node* node)
 : Node("ORB_SLAM3_Inertial"), m_SLAM(pSLAM), node_(node)
 {
-    tf_publisher = this->create_publisher<geometry_msgs::msg::TransformStamped>("transform", 10);
-    pclpublisher = this->create_publisher<sensor_msgs::msg::PointCloud2>("pointcloud", 10);
-    pathpublisher = this->create_publisher<nav_msgs::msg::Path>("path", 10);
-    posepublisher = this->create_publisher<geometry_msgs::msg::PoseStamped>("pose", 10);
-    statepublisher = this->create_publisher<std_msgs::msg::String>("state", 10);
-    flagpublisher = this->create_publisher<std_msgs::msg::Bool>("flag", 10);
+    tf_publisher = this->create_publisher<geometry_msgs::msg::TransformStamped>("orbslam/transform", 10);
+    pclpublisher = this->create_publisher<sensor_msgs::msg::PointCloud2>("orbslam/pointcloud", 10);
+    pathpublisher = this->create_publisher<nav_msgs::msg::Path>("orbslam/path", 10);
+    posepublisher = this->create_publisher<geometry_msgs::msg::PoseStamped>("orbslam/pose", 10);
+    statepublisher = this->create_publisher<std_msgs::msg::String>("sorbslam/tate", 10);
+    flagpublisher = this->create_publisher<std_msgs::msg::Bool>("orbslam/flag", 10);
 
     this->declare_parameter("frame_id", "orbslam3");
     this->declare_parameter("child_frame_id", "left_camera_link");

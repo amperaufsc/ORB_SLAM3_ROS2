@@ -42,6 +42,14 @@ def generate_launch_description():
             'child_frame_id',
             default_value=['left_camera_link']
         ),
+        DeclareLaunchArgument(
+            'left_camera',
+            default_value=['/stereo_left']
+        ),
+        DeclareLaunchArgument(
+            'right_camera',
+            default_value=['/stereo_right']
+        ),
 
         Node(
             package='orbslam3_ros2',
@@ -61,9 +69,9 @@ def generate_launch_description():
                 LaunchConfiguration('pangolin')
             ],
             remappings=[
-                ('camera/left', '/stereo_left'),
-                ('camera/right', '/stereo_right')
-            ]
+                ('camera/left', LaunchConfiguration('left_camera')),
+                ('camera/right', LaunchConfiguration('right_camera'))
+            ],
             parameters = [{'frame_id':LaunchConfiguration('frame_id'), 'child_frame_id':LaunchConfiguration('child_frame_id')}]
         ),
         # ExecuteProcess(
