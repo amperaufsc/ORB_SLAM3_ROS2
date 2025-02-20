@@ -46,7 +46,7 @@ Camera.width: 785
 Camera.height: 585
 
 # Camera frames per second
-Camera.fps: 60
+Camera.fps: 12
 
 # Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
 Camera.RGB: 1
