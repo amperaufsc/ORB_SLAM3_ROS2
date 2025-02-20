@@ -41,7 +41,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'child_frame_id',
             default_value=['left_camera_link']
-        )
+        ),
 
         Node(
             package='orbslam3_ros2',
