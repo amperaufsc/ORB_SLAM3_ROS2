@@ -7,7 +7,7 @@ SlamNode::SlamNode(ORB_SLAM3::System* pSLAM, rclcpp::Node* node)
     pclpublisher = this->create_publisher<sensor_msgs::msg::PointCloud2>("orbslam/pointcloud", 10);
     pathpublisher = this->create_publisher<nav_msgs::msg::Path>("orbslam/path", 10);
     posepublisher = this->create_publisher<geometry_msgs::msg::PoseStamped>("orbslam/pose", 10);
-    statepublisher = this->create_publisher<std_msgs::msg::String>("sorbslam/tate", 10);
+    statepublisher = this->create_publisher<std_msgs::msg::String>("orbslam/state", 10);
     flagpublisher = this->create_publisher<std_msgs::msg::Bool>("orbslam/flag", 10);
 
     this->declare_parameter("frame_id", "orbslam3");
