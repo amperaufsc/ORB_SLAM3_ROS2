@@ -20,29 +20,29 @@ File.version: "1.0"
 Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV)
-Camera1.fx: 470.0972
-Camera1.fy: 469.9648
-Camera1.cx: 396.4204
-Camera1.cy: 244.9491
+Camera1.fx: 453.7796
+Camera1.fy: 453.6716
+Camera1.cx: 394.6257
+Camera1.cy: 239.3860
 
 
-Camera1.k1: 0.0539
-Camera1.k2: -0.1003
-Camera1.k3: 0.0514
-Camera1.p1: 0.0029
-Camera1.p2: 0.0029
+Camera1.k1: 0.0151
+Camera1.k2: -0.0387
+Camera1.k3: 0.0
+Camera1.p1: 0.0
+Camera1.p2: 0.0
 
 
-Camera2.fx: 471.5233
-Camera2.fy: 471.7744
-Camera2.cx: 407.0176
-Camera2.cy: 234.1531
+Camera2.fx: 454.4696
+Camera2.fy: 454.6274
+Camera2.cx: 409.4907
+Camera2.cy: 228.6895
 
-Camera2.k1: 0.0664
-Camera2.k2: -0.1183
-Camera2.k3: 0.0580
-Camera2.p1: 0.0031
-Camera2.p2: 0.00078534
+Camera2.k1: 0.0247
+Camera2.k2: -0.0481
+Camera2.k3: 0.0
+Camera2.p1: 0.0
+Camera2.p2: 0.0
 
 
 Camera.width: 768
@@ -59,17 +59,17 @@ Stereo.T_c1_c2: !!opencv-matrix
   rows: 4
   cols: 4
   dt: f
-  data: [1.0000, -0.0014, 0.0045, -0.1479689,
-          0.0014, 1.0000, -0.0008, 0.004888,
-          -0.0045, 0.0008, 1.0000, 0.004957,
-          0.0, 0.0, 0.0, 1.0]
+  data: [1.0000, -0.0007, -0.0041, -0.1502344,
+         0.0007,  1.0000, -0.0018,  0.0000072,
+         0.0041,  0.0018,  1.0000, -0.0037036,
+         0.0,     0.0,     0.0,     1.0]
 
 #--------------------------------------------------------------------------------------------
 # ORB Parameters
 #--------------------------------------------------------------------------------------------
 
 # ORB Extractor: Number of features per image
-ORBextractor.nFeatures: 1200
+ORBextractor.nFeatures: 1000
 
 # ORB Extractor: Scale factor between levels in the scale pyramid 	
 ORBextractor.scaleFactor: 1.2
